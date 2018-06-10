@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views import View
 from django.contrib.auth.models import User
+from raven.contrib.django.raven_compat.models import client as raven_client
 
 
 class UsersView(View):
@@ -9,6 +10,7 @@ class UsersView(View):
         try:
             current_user = User.objects.get(id=user_id)
         except User.DoesNotExist:
+            raven_client.captureException()
             return HttpResponseNotFound(content='User not found')
         user_info = "Username: {}<br> First name: {}<br> Last name: {}<br> Email: {}".format(
             current_user.username,
