@@ -14,8 +14,9 @@ Social network for scientists.
     - `DJANGO_CONFIGURATION` - set up your conf (by default used `Dev` with `DEGUG=TRUE`).
     - `SENTRY_DSN` - If you don't have sentry DSN - Register in [Sentry](https://sentry.io/),
      and create new project, then put it here. Otherwise use your sentry DSN.
-4. Run `python3 manage.py migrate`
-5. Create new admin `python3 manage.py createsuperuser`
+4. Add new environment parameters to Your system: `source .env`
+5. Run `python3 manage.py migrate`
+6. Create new admin `python3 manage.py createsuperuser`
 
 # How to use
 
