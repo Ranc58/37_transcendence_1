@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User</title>
+</head>
+<body>
+    Username: {{ user.username }} <br>
+    First name: {% if user.first_name %} {{ user.first_name }} {% else %} Not available {% endif %} <br>
+    Last name: {% if user.last_name %} {{ user.last_name }} {% else %} Not available {% endif %} <br>
+    Email: {% if user.email %} {{ user.email }} {% else %} Not available {% endif %} <br>
+</body>
+</html>
