@@ -11,7 +11,8 @@ Social network for scientists.
 2. Install requirements: \
    `pip3 install -r requirements.txt` (alternatively try add `sudo` before command).
 3. Open `.env` and correct values: 
-    - `DJANGO_CONFIGURATION` - set up your conf (by default used `Dev` with `DEGUG=TRUE`).
+    - `DJANGO_CONFIGURATION` - set up your conf (by default used `Dev`).
+    - `SECRET_KEY_DJANGO` - Put here your secret key for django project if you setup conf for `Prod`
     - `SENTRY_DSN` - If you don't have sentry DSN - Register in [Sentry](https://sentry.io/),
      and create new project, then put it here. Otherwise use your sentry DSN.
 4. Run `python3 manage.py migrate`

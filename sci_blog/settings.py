@@ -8,7 +8,7 @@ class BaseConfig(Configuration):
 
     SECRET_KEY = 'v)=y&*d5z$5*i9m-vsw_64s$o*)ith^r4ys6nnt&as1+j#f8se'
 
-    DEBUG = False
+    DEBUG = True
 
     ALLOWED_HOSTS = []
 
@@ -99,4 +99,5 @@ class Dev(BaseConfig):
 
 
 class Prod(BaseConfig):
-    pass
+    DEBUG = False
+    SECRET_KEY = os.environ.get('SECRET_KEY_DJANGO')
