@@ -20,8 +20,8 @@ class BaseConfig(Configuration):
         'django.contrib.messages',
         'django.contrib.staticfiles',
         'django_extensions',
-        'raven.contrib.django.raven_compat',
         'users_app',
+        'raven.contrib.django.raven_compat',
     ]
 
     MIDDLEWARE = [
@@ -55,7 +55,7 @@ class BaseConfig(Configuration):
 
     WSGI_APPLICATION = 'sci_blog.wsgi.application'
 
-    DATABASES = values.DatabaseURLValue(values.Value(environ_name='DB_URI'))
+    DATABASES = values.DatabaseURLValue(environ_name='DB_URI')
 
     AUTH_PASSWORD_VALIDATORS = [
         {
