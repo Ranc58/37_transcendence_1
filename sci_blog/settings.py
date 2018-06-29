@@ -88,6 +88,7 @@ class BaseConfig(Configuration):
     USE_TZ = True
 
     STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
     RAVEN_CONFIG = {
         'dsn': values.Value(environ_name='RAVEN_DSN'),
