@@ -36,6 +36,7 @@ Run `pytest`
 Project will be by path `/var/www/sci_blog/` and starts by `systemd`. 
 1. Run `fab bootstrap` for quick deploy and go to `<HOST>`.
 2. Use command `fab create_superuser` for create user with nickname `admin` and password from `.env` file `ADMIN_PASS`.
+3. Go to `host` in browser.
 Another fabric commands:
  - `fab drop_db` - drop database 
  - `fab status_service` - get service status.

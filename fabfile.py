@@ -48,18 +48,17 @@ def create_database():
 def update_project():
     with cd(PROJECT_ROOT):
         run('git pull origin master')
-        run('python3 -m venv myvenv')
-        with source_virtualenv():
-            with prefix(
-                    'export DJANGO_SETTINGS_MODULE={settings}.settings '
-                    '&& export DJANGO_CONFIGURATION={conf}'.format(
-                        settings=PROJECT_NAME,
-                        conf=CONFIG
-                    )), shell_env(DB_URI=DB_URI):
-                run('source myvenv/bin/activate')
-                run('pip3 install -r requirements.txt')
-                run('python3 manage.py collectstatic --noinput')
-                run('python3 manage.py migrate')
+        if not exists('myvenv'):
+            run('python3 -m venv myvenv')
+        with prefix(
+                'export DJANGO_SETTINGS_MODULE={settings}.settings '
+                '&& export DJANGO_CONFIGURATION={conf}'.format(
+                    settings=PROJECT_NAME,
+                    conf=CONFIG
+                )), shell_env(DB_URI=DB_URI), source_virtualenv():
+            run('pip3 install -r requirements.txt')
+            run('python3 manage.py collectstatic --noinput')
+            run('python3 manage.py migrate')
 
 
 def clone_project():
@@ -125,8 +124,8 @@ def configure_systemd():
 
 @task
 def bootstrap():
-    update_server()
     if not exists(PROJECT_ROOT):
+        update_server()
         clone_project()
         create_database()
     configure_nginx()
