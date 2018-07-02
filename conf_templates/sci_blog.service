@@ -1,0 +1,14 @@
+[Unit]
+Description=Social network for scientists
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=3
+Environment=DB_URI={{ DB_URI }}
+Environment=SECRET_KEY_DJANGO={{ SECRET_KEY_DJANGO }}
+Environment=SENTRY_DSN={{ SENTRY_DSN }}
+ExecStart={{ VENV_DIR }}/bin/python3 {{ PROJECT_ROOT }}/manage.py runserver 0.0.0.0:8080
+
+[Install]
+WantedBy=multi-user.target
