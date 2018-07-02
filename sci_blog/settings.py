@@ -97,16 +97,3 @@ class Dev(BaseConfig):
 class Prod(BaseConfig):
     DEBUG = False
     SECRET_KEY = os.environ.get('SECRET_KEY_DJANGO')
-
-
-class Test(BaseConfig):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('PROJECT_NAME'),
-            'USER': os.getenv('PROJECT_NAME'),
-            'PASSWORD': os.getenv('DB_PASSWORD'),
-            'HOST': '127.0.0.1',
-            'PORT': '5432',
-        }
-    }

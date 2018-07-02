@@ -15,19 +15,32 @@ Social network for scientists.
     - `SECRET_KEY_DJANGO` - Put here your secret key for django project if you setup conf for `Prod`
     - `SENTRY_DSN` - If you don't have sentry DSN - Register in [Sentry](https://sentry.io/),
      and create new project, then put it here. Otherwise use your sentry DSN.
+    - `DB_PASSWORD` - password for database
+    - `ADMIN_PASS` - password for admin user(work only with fabric)
+    - `SSH_HOST` - args for SSH connect to server(only for fabric). Must be like `user@ip`
 4. Add new environment parameters to Your system: `source .env`
 5. Run `python3 manage.py migrate`
 6. Create new admin `python3 manage.py createsuperuser`
 
-# How to use
+# How to use locally
 
 1. Run `python3 manage.py runserver`
 2. Go to `127.0.0.1:8000/admin/` and create new user.
 3. Go to `127.0.0.1:8000/users/<USER_ID>` to see user info.
 
-# Tests
+# Tests locally
 
 Run `pytest`
+
+# How to use with fabric:
+Project will be by path `/var/www/sci_blog/` and starts by `systemd`. 
+1. Run `fab bootstrap` for quick deploy and go to `<HOST>`.
+2. Use command `fab create_superuser` for create user with nickname `admin` and password from `.env` file `ADMIN_PASS`.
+Another fabric commands:
+ - `fab drop_db` - drop database 
+ - `fab status_service` - get service status.
+ - `fab stop_service` - stop service.
+ - `fab restart_service` - restart service.
 
 # Project Goals
 
