@@ -50,15 +50,15 @@ def update_project():
         run('git pull origin master')
         if not exists('myvenv'):
             run('python3 -m venv myvenv')
-        with prefix(
-                'export DJANGO_SETTINGS_MODULE={settings}.settings '
-                '&& export DJANGO_CONFIGURATION={conf}'.format(
-                    settings=PROJECT_NAME,
-                    conf=CONFIG
-                )), shell_env(DB_URI=DB_URI), source_virtualenv():
-            run('pip3 install -r requirements.txt')
-            run('python3 manage.py collectstatic --noinput')
-            run('python3 manage.py migrate')
+            with prefix(
+                    'export DJANGO_SETTINGS_MODULE={settings}.settings '
+                    '&& export DJANGO_CONFIGURATION={conf}'.format(
+                        settings=PROJECT_NAME,
+                        conf=CONFIG
+                    )), shell_env(DB_URI=DB_URI), source_virtualenv():
+                run('pip3 install -r requirements.txt')
+                run('python3 manage.py collectstatic --noinput')
+                run('python3 manage.py migrate')
 
 
 def clone_project():
@@ -165,11 +165,13 @@ def status_service():
 @task
 def create_superuser():
     with cd(PROJECT_ROOT), source_virtualenv():
-        with prefix('export DJANGO_SETTINGS_MODULE={}.settings'.format(
-                PROJECT_NAME)), shell_env(DB_URI=DB_URI), settings(prompts={
+        with shell_env(DB_URI=DB_URI), settings(prompts={
                 "Password: ": os.getenv('ADMIN_PASS'),
                 "Password (again): ": os.getenv('ADMIN_PASS'),
                 }):
-                    run('python3 manage.py createsuperuser'
-                        ' --username admin'
-                        ' --email admin@example.com')
+            run('export DJANGO_SETTINGS_MODULE={}.settings'.format(
+                PROJECT_NAME
+            ))
+            run('python3 manage.py createsuperuser'
+                ' --username admin'
+                ' --email admin@example.com')
