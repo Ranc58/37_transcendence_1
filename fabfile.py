@@ -34,13 +34,15 @@ def restart():
 
 
 def create_database():
-    run('sudo -i -u postgres psql -c "CREATE USER {PROJECT_NAME} WITH PASSWORD \'{PASSWORD}\';"'.format(
-        PROJECT_NAME=PROJECT_NAME,
-        PASSWORD=DB_PASSWORD
-    ))
-    run('sudo -i -u postgres psql -c "CREATE DATABASE {PROJECT_NAME} WITH OWNER {PROJECT_NAME};"'.format(
-        PROJECT_NAME=PROJECT_NAME
-    ))
+    run('sudo -i -u postgres psql -c '
+        '"CREATE USER {PROJECT_NAME} WITH PASSWORD \'{PASSWORD}\';"'.format(
+            PROJECT_NAME=PROJECT_NAME,
+            PASSWORD=DB_PASSWORD
+        ))
+    run('sudo -i -u postgres psql -c '
+        '"CREATE DATABASE {PROJECT_NAME} WITH OWNER {PROJECT_NAME};"'.format(
+            PROJECT_NAME=PROJECT_NAME
+        ))
 
 
 def update_project():
@@ -49,12 +51,13 @@ def update_project():
         run('python3 -m venv myvenv')
         with source_virtualenv():
             with prefix(
-                    'export DJANGO_SETTINGS_MODULE={settings}.settings && export DJANGO_CONFIGURATION={conf}'.format(
+                    'export DJANGO_SETTINGS_MODULE={settings}.settings '
+                    '&& export DJANGO_CONFIGURATION={conf}'.format(
                         settings=PROJECT_NAME,
                         conf=CONFIG
                     )), shell_env(DB_URI=DB_URI):
-                run('source myvenv/bin/activate && pip3 install -r requirements.txt')
-                #run('source .env')
+                run('source myvenv/bin/activate')
+                run('pip3 install -r requirements.txt')
                 run('python3 manage.py collectstatic --noinput')
                 run('python3 manage.py migrate')
 
@@ -77,7 +80,9 @@ def update_server():
 
 
 def configure_nginx():
-    conf_filepath = '/etc/nginx/sites-available/{PROJECT_NAME}.conf'.format(PROJECT_NAME=PROJECT_NAME)
+    conf_filepath = '/etc/nginx/sites-available/{PROJECT_NAME}.conf'.format(
+        PROJECT_NAME=PROJECT_NAME
+    )
     context = {
         'PROJECT_NAME': PROJECT_NAME,
         'HOST': '85.143.223.88'
@@ -90,12 +95,15 @@ def configure_nginx():
         use_jinja=True,
     )
     if not exists(conf_filepath):
-        sudo('ln -s /etc/nginx/sites-available/{project_name}.conf /etc/nginx/sites-enabled/'.format(
-            project_name=PROJECT_NAME))
+        sudo('ln -s /etc/nginx/sites-available/{project_name}.conf '
+             '/etc/nginx/sites-enabled/'.format(
+                project_name=PROJECT_NAME))
 
 
 def configure_systemd():
-    systemd_filepath = '/etc/systemd/system/{PROJECT_NAME}.service'.format(PROJECT_NAME=PROJECT_NAME)
+    systemd_filepath = '/etc/systemd/system/{PROJECT_NAME}.service'.format(
+        PROJECT_NAME=PROJECT_NAME
+    )
     context = {
         'DB_URI': DB_URI,
         'SECRET_KEY_DJANGO': os.getenv('SECRET_KEY_DJANGO'),
@@ -110,7 +118,9 @@ def configure_systemd():
         template_dir='conf_templates',
         use_jinja=True,
     )
-    run('systemctl enable {PROJECT_NAME}.service'.format(PROJECT_NAME=PROJECT_NAME))
+    run('systemctl enable {PROJECT_NAME}.service'.format(
+        PROJECT_NAME=PROJECT_NAME
+    ))
 
 
 @task
@@ -156,9 +166,11 @@ def status_service():
 @task
 def create_superuser():
     with cd(PROJECT_ROOT), source_virtualenv():
-        with prefix('export DJANGO_SETTINGS_MODULE={}.settings'.format(PROJECT_NAME)), shell_env(DB_URI=DB_URI):
-            with settings(prompts={
+        with prefix('export DJANGO_SETTINGS_MODULE={}.settings'.format(
+                PROJECT_NAME)), shell_env(DB_URI=DB_URI), settings(prompts={
                 "Password: ": os.getenv('ADMIN_PASS'),
                 "Password (again): ": os.getenv('ADMIN_PASS'),
-            }):
-                run('python3 manage.py createsuperuser --username admin --email admin@example.com')
+                }):
+                    run('python3 manage.py createsuperuser'
+                        ' --username admin'
+                        ' --email admin@example.com')
