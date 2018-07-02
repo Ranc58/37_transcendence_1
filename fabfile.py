@@ -50,15 +50,16 @@ def update_project():
         run('git pull origin master')
         if not exists('myvenv'):
             run('python3 -m venv myvenv')
-            with prefix(
-                    'export DJANGO_SETTINGS_MODULE={settings}.settings '
-                    '&& export DJANGO_CONFIGURATION={conf}'.format(
-                        settings=PROJECT_NAME,
-                        conf=CONFIG
-                    )), shell_env(DB_URI=DB_URI), source_virtualenv():
-                run('pip3 install -r requirements.txt')
-                run('python3 manage.py collectstatic --noinput')
-                run('python3 manage.py migrate')
+        with shell_env(DB_URI=DB_URI), source_virtualenv():
+            run('export DJANGO_SETTINGS_MODULE={NAME}.settings'.format(
+                NAME=PROJECT_NAME
+            ))
+            run('export DJANGO_CONFIGURATION={conf}'.format(
+                conf=CONFIG
+            ))
+            run('pip3 install -r requirements.txt')
+            run('python3 manage.py collectstatic --noinput')
+            run('python3 manage.py migrate')
 
 
 def clone_project():
